@@ -1,0 +1,25 @@
+int E[55][55];//表示从i到j的距离
+bool used[55];//i是否使用过
+
+void Dijkstra(int s)//s表示起始点
+{
+    fill(used, used+n+1, false);// fill函数与memset函数类似
+    E[s][s] = 0;
+    while(true){
+        int v = -1;
+        for(int i = 1; i <= n; i++)
+        {
+            if(used[i] == false && (v == -1 || E[s][i] < E[s][v]))
+            {
+                v = i;
+            }
+        }
+        if(v == -1)
+           break;
+        used[v] = true;
+        for(int i = 1; i <= n; i++)
+        {      
+             E[s][i] = min(E[s][i], E[s][v] + E[v][i]);
+        }
+    }
+}
