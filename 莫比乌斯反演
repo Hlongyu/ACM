@@ -1,0 +1,52 @@
+const int MAXN = 1000000;
+bool check[MAXN+10];
+int prime[MAXN+10];
+int mu[MAXN+10];
+void Moblus() //求莫比乌斯函数
+{
+    memset(check, false, sizeof(check));
+    mu[1] = 1;
+    int tot = 0;
+    for(int i = 2; i <= MAXN; i++)
+    {
+        if(!check[i])
+        {
+            prime[tot++] = i;
+            mu[i] = -1;
+        }
+        for(int j = 0; j < tot; j++)
+        {
+            if(i * prime[j] > MAXN) break;
+            check[i*prime[j]] = true;
+            if(i % prime[j] == 0)
+            {
+                mu[i*prime[j]] = 0;
+                break;
+            }
+            else
+            {
+                mu[i*prime[j]] = -mu[i];
+            }
+        }
+    }
+}
+
+int sum[MAXN+10];
+long long solve(int n, int m) // 求[1,n] [1,m]
+{
+    ll ans = 0;
+    for(int i = 1, la = 0; i <= n; i = la+1)
+    {
+        la = min(n/(n/i), m/(m/i));
+        ans += (ll)(sum[la] - sum[i-1]) * (n/i) * (m/i);
+    }
+    return ans;
+}
+
+int main()
+{
+    Moblus();
+    sum[0] = 0;
+    for(int i = 1; i <= MAXN; i++)
+        sum[i] = sum[i-1] + mu[i];
+}
